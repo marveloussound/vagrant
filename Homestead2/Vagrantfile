@@ -1,0 +1,73 @@
+require 'json'
+require 'yaml'
+
+VAGRANTFILE_API_VERSION ||= "2"
+confDir = $confDir ||= File.expand_path("vendor/laravel/homestead", File.dirname(__FILE__))
+
+homesteadYamlPath = "Homestead.yaml"
+homesteadJsonPath = "Homestead.json"
+afterScriptPath = "after.sh"
+aliasesPath = "aliases"
+
+require File.expand_path(confDir + '/scripts/homestead.rb')
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    if File.exists? aliasesPath then
+        config.vm.provision "file", source: aliasesPath, destination: "~/.bash_aliases"
+    end
+
+    if File.exists? homesteadYamlPath then
+        Homestead.configure(config, YAML::load(File.read(homesteadYamlPath)))
+    elsif File.exists? homesteadJsonPath then
+        Homestead.configure(config, JSON.parse(File.read(homesteadJsonPath)))
+    end
+
+    if File.exists? afterScriptPath then
+        config.vm.provision "shell", path: afterScriptPath
+    end
+
+    config.winnfsd.uid = 900
+    config.winnfsd.gid = 900
+
+   config.vm.synced_folder '../../thirtieth', '/home/vagrant/project/thirtieth',
+   :create => true,
+   :nfs => true
+
+   config.vm.synced_folder '../../test', '/home/vagrant/project/test',
+   :create => true,
+   :nfs => true
+   config.vm.synced_folder '../../TFM', '/home/vagrant/project/TFM',
+   :create => true,
+   :nfs => true
+
+   config.bindfs.bind_folder "/home/vagrant/project/thirtieth","/var/www/thirtieth",
+   :owner => "vagrant",
+   :group => "vagrant", 
+   :'create-as-user' => true, 
+   :'perms'=> "u=rwx:g=rx:o=rx", # http://bindfs.org/docs/bindfs.1.html#sect12
+   :'create-with-perms' => "u=rwx:g=rwx:o=rwx", 
+   :'chown-ignore' => true, 
+   :'chgrp-ignore' => true, 
+   :'chmod-ignore' => true
+
+   config.bindfs.bind_folder "/home/vagrant/project/test","/var/www/test",
+   :owner => "vagrant",
+   :group => "vagrant", 
+   :'create-as-user' => true, 
+   :'perms'=> "u=rwx:g=rx:o=rx", # http://bindfs.org/docs/bindfs.1.html#sect12
+   :'create-with-perms' => "u=rwx:g=rwx:o=rwx", 
+   :'chown-ignore' => true, 
+   :'chgrp-ignore' => true, 
+   :'chmod-ignore' => true
+
+   config.bindfs.bind_folder "/home/vagrant/project/TFM","/home1/WWW/www",
+   :owner => "vagrant",
+   :group => "vagrant", 
+   :'create-as-user' => true, 
+   :'perms'=> "u=rwx:g=rx:o=rx", # http://bindfs.org/docs/bindfs.1.html#sect12
+   :'create-with-perms' => "u=rwx:g=rwx:o=rwx", 
+   :'chown-ignore' => true, 
+   :'chgrp-ignore' => true, 
+   :'chmod-ignore' => true
+
+end
