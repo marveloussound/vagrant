@@ -56,10 +56,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
    config.vm.synced_folder '../../test', '/home/vagrant/project/test',
    :create => true,
-   :nfs => true
+   :nfs => { mount_options: ['dmode=777', 'fmode=777'] }
+
    config.vm.synced_folder '../../TFM', '/home/vagrant/project/TFM',
    :create => true,
-   :nfs => true
+   :nfs => { mount_options: ['dmode=777', 'fmode=777'] }
 
 
    config.bindfs.bind_folder "/home/vagrant/project/test","/var/www/test",
@@ -72,11 +73,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    :'chgrp-ignore' => true, 
    :'chmod-ignore' => true
 
-   config.bindfs.bind_folder "/home/vagrant/project/TFM","/home1/WWW/www",
+   config.bindfs.bind_folder "/home/vagrant/project/TFM/html","/home1/WWW/www/html",
    :owner => "vagrant",
    :group => "vagrant", 
    :'create-as-user' => true, 
    :'perms'=> "u=rwx:g=rx:o=rx", # http://bindfs.org/docs/bindfs.1.html#sect12
+   :'create-with-perms' => "u=rwx:g=rwx:o=rwx", 
+   :'chown-ignore' => true, 
+   :'chgrp-ignore' => true, 
+   :'chmod-ignore' => true
+
+   config.bindfs.bind_folder "/home/vagrant/project/TFM/data","/home1/WWW/www/data",
+   :owner => "vagrant",
+   :group => "vagrant", 
+   :'create-as-user' => true, 
+   :'perms'=> "u=rwx:g=rwx:o=rwx", # http://bindfs.org/docs/bindfs.1.html#sect12
    :'create-with-perms' => "u=rwx:g=rwx:o=rwx", 
    :'chown-ignore' => true, 
    :'chgrp-ignore' => true, 
