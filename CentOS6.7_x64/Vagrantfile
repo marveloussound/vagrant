@@ -58,7 +58,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    :create => true,
    :nfs => { mount_options: ['dmode=777', 'fmode=777'] }
 
-   config.vm.synced_folder '../../TFM', '/home/vagrant/project/TFM',
+   config.vm.synced_folder '../../Puppet', '/home/vagrant/project/Puppet',
    :create => true,
    :nfs => { mount_options: ['dmode=777', 'fmode=777'] }
 
@@ -73,7 +73,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    :'chgrp-ignore' => true, 
    :'chmod-ignore' => true
 
-   config.bindfs.bind_folder "/home/vagrant/project/TFM/html","/home1/WWW/www/html",
+   config.bindfs.bind_folder "/home/vagrant/project/Puppet/html","/home1/WWW/www/html",
    :owner => "vagrant",
    :group => "vagrant", 
    :'create-as-user' => true, 
@@ -83,7 +83,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
    :'chgrp-ignore' => true, 
    :'chmod-ignore' => true
 
-   config.bindfs.bind_folder "/home/vagrant/project/TFM/data","/home1/WWW/www/data",
+   config.bindfs.bind_folder "/home/vagrant/project/Puppet/data","/home1/WWW/www/data",
    :owner => "vagrant",
    :group => "vagrant", 
    :'create-as-user' => true, 
